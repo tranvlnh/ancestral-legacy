@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://kos2ipt28osf"]
+
+[ext_resource type="Texture2D" uid="uid://crsgcbc30xeqa" path="res://assets/foreground.png" id="1_2gfar"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lqts8"]
+size = Vector2(640, 32)
+
+[node name="Foreground" type="StaticBody2D" unique_id=1141578306]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1039170066]
+scale = Vector2(2, 1)
+texture = ExtResource("1_2gfar")
+centered = false
+offset = Vector2(0, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1276516440]
+position = Vector2(320, 16)
+shape = SubResource("RectangleShape2D_lqts8")

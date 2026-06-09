@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://ci8n6wm307cad"]
+
+[ext_resource type="Texture2D" uid="uid://bu0kdgjpiv534" path="res://assets/background.png" id="1_274mx"]
+[ext_resource type="Texture2D" uid="uid://dx06kyxlwdtsx" path="res://assets/middleground1.png" id="2_nou1y"]
+[ext_resource type="Texture2D" uid="uid://cuxp4kclwwesq" path="res://assets/middleground2.png" id="3_dnxxv"]
+
+[node name="Background" type="ParallaxBackground" unique_id=349039132]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=397531727]
+texture = ExtResource("1_274mx")
+centered = false
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="." unique_id=1753891324]
+motion_scale = Vector2(0.7, 1)
+motion_mirroring = Vector2(320, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxLayer" unique_id=1700086306]
+texture = ExtResource("2_nou1y")
+centered = false
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="." unique_id=1169640056]
+motion_scale = Vector2(0.9, 1)
+motion_mirroring = Vector2(320, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxLayer2" unique_id=1181719888]
+texture = ExtResource("3_dnxxv")
+centered = false

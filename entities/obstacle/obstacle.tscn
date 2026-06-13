@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bu8onl1rmllnb"]
 
+[ext_resource type="Script" path="res://entities/obstacle/obstacle.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://b87yoijok3fnc" path="res://assets/enemies.png" id="1_a0uk1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j1v6i"]
@@ -49,6 +50,7 @@ animations = [{
 size = Vector2(26, 15)
 
 [node name="Obstacle" type="Area2D" unique_id=1557659178]
+script = ExtResource("1_script")
 
 [node name="Animated" type="AnimatedSprite2D" parent="." unique_id=1593424627]
 sprite_frames = SubResource("SpriteFrames_ybwp8")

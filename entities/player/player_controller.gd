@@ -20,7 +20,7 @@ func _physics_process(delta: float) -> void:
 	velocity.y = min(velocity.y, stats.max_fall_speed)
 
 	# Jump input
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+	if (Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("jump")) and is_on_floor():
 		velocity.y = stats.jump_velocity
 		move_state = MoveState.AIRBORNE
 		_play_jump_sound()

@@ -41,9 +41,27 @@ var score: float = 0.0
 var current_speed: float = BASE_SPEED
 
 func _ready() -> void:
+	_setup_input_actions()
 	screen_size = get_viewport_rect().size
 	$Player.died.connect(_on_player_died)
 	$UI.restart_requested.connect(_on_restart_requested)
+
+func _setup_input_actions() -> void:
+	if InputMap.has_action("jump"):
+		return
+	InputMap.add_action("jump")
+	# Spacebar
+	var key := InputEventKey.new()
+	key.keycode = KEY_SPACE
+	InputMap.action_add_event("jump", key)
+	# Tap anywhere on screen (mobile)
+	var touch := InputEventScreenTouch.new()
+	touch.pressed = true
+	InputMap.action_add_event("jump", touch)
+	# Left click (desktop fallback)
+	var mouse := InputEventMouseButton.new()
+	mouse.button_index = MOUSE_BUTTON_LEFT
+	InputMap.action_add_event("jump", mouse)
 
 func _process(delta: float) -> void:
 	if game_over:

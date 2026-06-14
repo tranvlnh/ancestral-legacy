@@ -4,31 +4,30 @@ const THORN_SCENE: PackedScene = preload("res://entities/obstacle/thorn.tscn")
 const ENEMY_SCENE: PackedScene = preload("res://entities/obstacle/enemy.tscn")
 const COFFEE_SCENE: PackedScene = preload("res://entities/collectible/coffee.tscn")
 
+@export var player_stats: PlayerStats
+
 # Game speed constants
 const BASE_SPEED: float = 150.0
 const SPEED_SCALE_RATE: float = 0.8
 const MAX_SPEED: float = 400.0
 
-# Physics constants from PlayerStats
-const JUMP_VELOCITY: float = 380.0
-const GRAVITY: float = 980.0
-
-# Calculated from physics: time = 2 * (jump_velocity / gravity)
-const JUMP_DURATION: float = 0.776  # seconds in air
-
-# Spawn algorithm constants
-const MIN_SAFETY_FACTOR: float = 1.8  # Khoảng cách tối thiểu = 1.8x quãng nhảy
-const MAX_SAFETY_FACTOR: float = 2.5  # Khoảng cách tối đa = 2.5x quãng nhảy
-const DIFFICULTY_CURVE: float = 0.0015  # Tốc độ giảm độ khó
+# Spawn algorithm constants - dùng từ player_stats
+const MIN_SAFETY_FACTOR: float = 1.8
+const MAX_SAFETY_FACTOR: float = 2.5
+const DIFFICULTY_CURVE: float = 0.0015
 
 const SPAWN_BUFFER_X: float = 80.0
 const CLEANUP_BUFFER_X: float = 80.0
 const THORN_Y: float = 144.0
 const ENEMY_Y: float = 80.0
-const COFFEE_Y_FLOOR: float = 142.0  # gần đất, chạy qua là nhặt
-const COFFEE_Y_HIGH: float = 90.0   # trên cao, cần nhảy
-const COFFEE_FLOOR_CHANCE: float = 0.65  # 65% sát đất
-const COFFEE_SPAWN_CHANCE: float = 0.4  # 40% cơ hội spawn coffee
+const COFFEE_Y_FLOOR: float = 142.0
+const COFFEE_Y_HIGH: float = 90.0
+const COFFEE_FLOOR_CHANCE: float = 0.65
+const COFFEE_SPAWN_CHANCE: float = 0.4
+
+# Coffee spawn physics-based constants
+const COFFEE_MIN_GAP: float = 60.0
+const COFFEE_MAX_GAP: float = 140.0
 
 var screen_size: Vector2
 var distance_travelled: float = 0.0
@@ -43,6 +42,8 @@ var current_speed: float = BASE_SPEED
 func _ready() -> void:
 	_setup_input_actions()
 	screen_size = get_viewport_rect().size
+	if player_stats == null:
+		player_stats = PlayerStats.new()
 	$Player.died.connect(_on_player_died)
 	$UI.restart_requested.connect(_on_restart_requested)
 
@@ -88,7 +89,8 @@ func _process(delta: float) -> void:
 func _spawn_obstacles() -> void:
 	while distance_travelled >= next_obstacle_spawn_distance:
 		# Tính toán khoảng cách dựa trên tốc độ hiện tại và vật lý
-		var jump_distance := current_speed * JUMP_DURATION
+		var jump_duration : float = 2.0 * abs(player_stats.jump_velocity) / player_stats.gravity
+		var jump_distance := current_speed * jump_duration
 
 		# Độ khó tăng dần: safety factor giảm từ MAX -> MIN theo distance
 		var progress := 1.0 - exp(-distance_travelled * DIFFICULTY_CURVE)
@@ -128,20 +130,40 @@ func _cleanup_obstacles() -> void:
 func _spawn_coffee() -> void:
 	while distance_travelled >= next_coffee_spawn_distance:
 		if randf() < COFFEE_SPAWN_CHANCE:
-			var coffee_x : float = $Camera2D.position.x + screen_size.x + SPAWN_BUFFER_X
-			var coffee_y: float = COFFEE_Y_FLOOR if randf() < COFFEE_FLOOR_CHANCE else COFFEE_Y_HIGH
-
-			# Check trùng obstacle — nếu cùng Y và quá gần thì dời coffee
-			var spawn_safe := false
+			# Tìm obstacle gần nhất để tính toán vị trí spawn
+			var nearest_obstacle: Node2D = null
+			var min_dx: float = INF
 			for obstacle in spawned_obstacles:
-				var dx : float = abs(obstacle.position.x - coffee_x)
-				var dy : float = abs(obstacle.position.y - coffee_y)
-				# Nếu cùng vị trí Y (hoặc gần) và X quá gần → trùng
-				if dy < 20.0 and dx < 30.0:
-					# Dời ra sau obstacle một khoảng an toàn
-					coffee_x = obstacle.position.x + 180.0
-					spawn_safe = true
-					break
+				var dx: float = obstacle.position.x - ($Camera2D.position.x + screen_size.x)
+				if dx > -SPAWN_BUFFER_X * 2 and dx < min_dx:
+					min_dx = dx
+					nearest_obstacle = obstacle
+
+			# Tính toán vị trí spawn dựa trên vật lý
+			var coffee_x: float
+			var coffee_y: float
+
+			if nearest_obstacle != null:
+				# Spawn sau obstacle một khoảng tính toán được
+				var gap: float = randf_range(COFFEE_MIN_GAP, COFFEE_MAX_GAP)
+				coffee_x = nearest_obstacle.position.x + gap
+
+				# Tính chiều cao reachable dựa trên vận tốc và trọng lực
+				# Sử dụng công thức projectile motion: y = v0*t - 0.5*g*t^2
+				var time_to_obstacle: float = gap / current_speed
+				var max_reachable_height: float = abs(player_stats.jump_velocity) * time_to_obstacle - 0.5 * player_stats.gravity * pow(time_to_obstacle, 2)
+
+				# Chọn Y position dựa trên độ cao reachable
+				if max_reachable_height > 40.0:
+					# Có thể nhảy qua, spawn trên cao
+					coffee_y = COFFEE_Y_HIGH if randf() < 0.4 else COFFEE_Y_FLOOR
+				else:
+					# Không thể nhảy, spawn sát đất để nhặt dễ
+					coffee_y = COFFEE_Y_FLOOR
+			else:
+				# Không có obstacle, spawn ngẫu nhiên như cũ
+				coffee_x = $Camera2D.position.x + screen_size.x + SPAWN_BUFFER_X
+				coffee_y = COFFEE_Y_FLOOR if randf() < COFFEE_FLOOR_CHANCE else COFFEE_Y_HIGH
 
 			var coffee := COFFEE_SCENE.instantiate() as Node2D
 			coffee.position = Vector2(coffee_x, coffee_y)

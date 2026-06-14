@@ -38,4 +38,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # Action firebelley tự động xuất kết quả vào đầu ra build_directory, ta sẽ lấy dữ liệu từ đây để đẩy lên nhánh gh-pages
-          publish_dir: ${{ steps.export.outputs.build_directory }}
+          publish_dir: ${{ steps.export.outputs.build_directory }}/Web

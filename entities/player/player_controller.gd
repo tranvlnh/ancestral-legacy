@@ -39,21 +39,9 @@ func _input(event: InputEvent) -> void:
 	# Web export fires PointerEvent → InputEventMouseButton, not InputEventScreenTouch
 	if event is InputEventScreenTouch and event.pressed:
 		_jump_pressed = true
-		_request_landscape()
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_jump_pressed = true
-		_request_landscape()
 
-func _request_landscape() -> void:
-	if DisplayServer.get_name() != "web":
-		return
-	# screen.orientation.lock needs user gesture — call once per tap
-	JavaScriptBridge.eval("""
-		if (screen.orientation && !window._landscape_locked) {
-			screen.orientation.lock('landscape').catch(function(){});
-			window._landscape_locked = true;
-		}
-	""", false)
 
 func die() -> void:
 	if move_state != MoveState.DEAD:

@@ -1,0 +1,41 @@
+name: Deploy Godot 4.6 Game to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  export_game:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v5
+
+      - name: Export Godot 4.6 Project (Web)
+        id: export
+        uses: firebelley/godot-export@v8.0.0
+        with:
+          # Bắt buộc: Link tải trực tiếp Engine bản Headless (Linux x86_64) của Godot 4.6
+          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_linux.x86_64.zip
+          
+          # Bắt buộc: Link tải trực tiếp Export Templates của Godot 4.6
+          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/4.6-stable/Godot_v4.6-stable_export_templates.tpz
+          
+          # Đường dẫn tương đối trỏ tới thư mục chứa file project.godot (giữ là ./ nếu file nằm ở thư mục gốc)
+          relative_project_path: ./
+          
+          # Không nén file thành zip vì ta cần đẩy file html gốc lên web
+          archive_output: false
+          
+          # Lọc đúng tên Preset bạn đã lưu trong export_presets.cfg (ví dụ: Web)
+          presets_to_export: Web
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Action firebelley tự động xuất kết quả vào đầu ra build_directory, ta sẽ lấy dữ liệu từ đây để đẩy lên nhánh gh-pages
+          publish_dir: ${{ steps.export.outputs.build_directory }}/Web

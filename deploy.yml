@@ -1,0 +1,27 @@
+name: Deploy Godot Game to GitHub Pages
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Setup Godot
+              uses: josephbmanley/build-godot-action@v1.4.1
+              with:
+                  version: "3.5"
+                  export-templates: "true"
+                  use-mono: false
+
+            - name: Build Game
+              run: godot --export "HTML5" ./build/index.html
+
+            - name: Deploy to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./build

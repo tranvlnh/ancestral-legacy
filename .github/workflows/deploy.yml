@@ -16,16 +16,20 @@ jobs:
         with:
           lfs: true
 
-      - name: Build Godot 4.6 Project (Web)
-        uses: firebelley/godot-export@v5.2.1
+      # Bước 1: Cài đặt đúng phiên bản Godot và Export Templates tương ứng
+      - name: Setup Godot Engine
+        uses: chickenmesh/setup-godot@v2
         with:
-          # Chỉ định chính xác phiên bản Godot 4.6 của bạn
-          godot_version: "4.6" 
-          # Từ Godot 4, preset mặc định cho Web được gọi là "Web" (thay vì HTML5)
-          export_preset_name: "Web" 
-          export_output_path: "build/index.html"
-          export_as_debug: false
+          version: "4.6" # Bạn có thể ghi rõ 4.6.stable hoặc hệ thống tự lấy bản ổn định nhất của 4.6
+          use-mono: false
 
+      # Bước 2: Tạo thư mục build và chạy lệnh Export gốc của Godot 4
+      - name: Build Godot Project (Web)
+        run: |
+          mkdir -p build
+          godot --headless --export-release "Web" build/index.html
+
+      # Bước 3: Đẩy sản phẩm lên GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:

@@ -1,41 +1,33 @@
-name: Deploy Godot Game to GitHub Pages
+name: Deploy Godot 4.6 Game to GitHub Pages
 
 on:
-    push:
-        branches: [main]
+  push:
+    branches: [main]
 
-# Thêm quyền viết để có thể đẩy code lên nhánh gh-pages
 permissions:
-    contents: write
+  contents: write
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Source Code
-              uses: actions/checkout@v4
-              with:
-                  lfs: true
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
 
-            - name: Create Build Directory
-              run: mkdir -p ./build
+      - name: Build Godot 4.6 Project (Web)
+        uses: firebelley/godot-export@v5.2.1
+        with:
+          # Chỉ định chính xác phiên bản Godot 4.6 của bạn
+          godot_version: "4.6" 
+          # Từ Godot 4, preset mặc định cho Web được gọi là "Web" (thay vì HTML5)
+          export_preset_name: "Web" 
+          export_output_path: "build/index.html"
+          export_as_debug: false
 
-            - name: Build Game (Godot Export)
-              uses: josephbmanley/build-godot-action@v1.4.1
-              with:
-                  name: index
-                  preset: Web
-                  projectDir: "."
-
-            - name: Move Files to Deploy Directory
-              run: |
-                  # Di chuyển các file đã build (index.html, index.js, index.pck...) vào thư mục build để deploy
-                  # Action josephbmanley mặc định xuất file ra thư mục gốc hoặc build tùy cấu hình export_presets.cfg.
-                  # Dòng dưới đảm bảo gom tất cả những gì liên quan đến web vào thư mục ./build
-                  mv index.* ./build/ || true
-
-            - name: Deploy to GitHub Pages
-              uses: peaceiris/actions-gh-pages@v4
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./build
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build

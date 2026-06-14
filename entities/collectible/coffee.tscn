@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://ixtyxcxupooy"]
+
+[ext_resource type="Script" uid="uid://smte68ya7my6" path="res://entities/collectible/coffee.gd" id="1_h5c1h"]
+[ext_resource type="Texture2D" uid="uid://5ejkua2tuowe" path="res://assets/coffee.png" id="2_voiee"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nv0wu"]
+atlas = ExtResource("2_voiee")
+region = Rect2(0, 0, 17, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5co43"]
+atlas = ExtResource("2_voiee")
+region = Rect2(17, 0, 17, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_by67k"]
+atlas = ExtResource("2_voiee")
+region = Rect2(34, 0, 17, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lacc0"]
+atlas = ExtResource("2_voiee")
+region = Rect2(51, 0, 17, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w8y16"]
+atlas = ExtResource("2_voiee")
+region = Rect2(68, 0, 17, 18)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ybwp8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nv0wu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5co43")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_by67k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lacc0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w8y16")
+}],
+"loop": true,
+"name": &"default",
+"speed": 9.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a0uk1"]
+size = Vector2(15, 15)
+
+[node name="Coffee" type="Area2D" unique_id=1557659178]
+script = ExtResource("1_h5c1h")
+
+[node name="Animated" type="AnimatedSprite2D" parent="." unique_id=1593424627]
+sprite_frames = SubResource("SpriteFrames_ybwp8")
+autoplay = "default"
+frame_progress = 0.14585155
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1771718191]
+shape = SubResource("RectangleShape2D_a0uk1")

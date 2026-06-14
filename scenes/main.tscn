@@ -27,6 +27,6 @@ stats = SubResource("Resource_tbgi4")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=134505145]
 anchor_mode = 0
 
-[node name="UI" parent="." instance=ExtResource("5_ui")]
+[node name="UI" parent="." unique_id=1455238912 instance=ExtResource("5_ui")]
 
-[node name="AudioManager" parent="." instance=ExtResource("6_audio")]
+[node name="AudioManager" parent="." unique_id=484868458 instance=ExtResource("6_audio")]

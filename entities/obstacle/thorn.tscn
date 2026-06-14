@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://dmoirk1q1g4d4"]
+
+[ext_resource type="Script" path="res://entities/obstacle/thorn.gd" id="1_lfk03"]
+[ext_resource type="Texture2D" uid="uid://cmxmegmo8pn8r" path="res://assets/thorn.png" id="2_lfk03"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a5cqn"]
+atlas = ExtResource("2_lfk03")
+region = Rect2(0, 12, 8, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v4tq0"]
+atlas = ExtResource("2_lfk03")
+region = Rect2(8, 12, 8, 4)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ybwp8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a5cqn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v4tq0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Thorn" type="Area2D" unique_id=1557659178]
+script = ExtResource("1_lfk03")
+
+[node name="Animated" type="AnimatedSprite2D" parent="." unique_id=1593424627]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_ybwp8")
+autoplay = "default"
+frame_progress = 0.44901794
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=189697914]
+polygon = PackedVector2Array(-3, -6, 3, -6, 12, 3, 12, 6, -12, 6, -12, 3)

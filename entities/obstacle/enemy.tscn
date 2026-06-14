@@ -1,19 +1,7 @@
 [gd_scene format=3 uid="uid://blswonje7cffu"]
 
 [ext_resource type="Texture2D" uid="uid://b87yoijok3fnc" path="res://assets/enemies.png" id="1_a0uk1"]
-
-[sub_resource type="GDScript" id="GDScript_a0uk1"]
-script/source = "extends Area2D
-
-signal player_hit
-
-func _ready() -> void:
-	body_entered.connect(_on_body_entered)
-
-func _on_body_entered(body: Node2D) -> void:
-	if body.name == \"Player\":
-		player_hit.emit()
-"
+[ext_resource type="Script" uid="uid://cis7jk21p1ppw" path="res://entities/obstacle/enemy.gd" id="1_script"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j1v6i"]
 atlas = ExtResource("1_a0uk1")
@@ -62,7 +50,7 @@ animations = [{
 size = Vector2(26, 15)
 
 [node name="Obstacle" type="Area2D" unique_id=1557659178]
-script = SubResource("GDScript_a0uk1")
+script = ExtResource("1_script")
 
 [node name="Animated" type="AnimatedSprite2D" parent="." unique_id=1593424627]
 sprite_frames = SubResource("SpriteFrames_ybwp8")

@@ -128,9 +128,23 @@ func _cleanup_obstacles() -> void:
 func _spawn_coffee() -> void:
 	while distance_travelled >= next_coffee_spawn_distance:
 		if randf() < COFFEE_SPAWN_CHANCE:
-			var coffee := COFFEE_SCENE.instantiate() as Node2D
+			var coffee_x : float = $Camera2D.position.x + screen_size.x + SPAWN_BUFFER_X
 			var coffee_y: float = COFFEE_Y_FLOOR if randf() < COFFEE_FLOOR_CHANCE else COFFEE_Y_HIGH
-			coffee.position = Vector2($Camera2D.position.x + screen_size.x + SPAWN_BUFFER_X, coffee_y)
+
+			# Check trùng obstacle — nếu cùng Y và quá gần thì dời coffee
+			var spawn_safe := false
+			for obstacle in spawned_obstacles:
+				var dx : float = abs(obstacle.position.x - coffee_x)
+				var dy : float = abs(obstacle.position.y - coffee_y)
+				# Nếu cùng vị trí Y (hoặc gần) và X quá gần → trùng
+				if dy < 20.0 and dx < 30.0:
+					# Dời ra sau obstacle một khoảng an toàn
+					coffee_x = obstacle.position.x + 180.0
+					spawn_safe = true
+					break
+
+			var coffee := COFFEE_SCENE.instantiate() as Node2D
+			coffee.position = Vector2(coffee_x, coffee_y)
 			coffee.collected.connect(_on_coffee_collected)
 			add_child(coffee)
 			spawned_collectibles.append(coffee)

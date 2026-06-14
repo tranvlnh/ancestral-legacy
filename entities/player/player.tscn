@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://cscxbslvggoxb"]
+
+[ext_resource type="Script" uid="uid://div2pj5hj3b51" path="res://entities/player/player_controller.gd" id="1_symyc"]
+[ext_resource type="Texture2D" uid="uid://ds70oqwdflb7p" path="res://assets/player.png" id="2_abrql"]
+[ext_resource type="Script" uid="uid://bxn4u7ivas1jg" path="res://entities/player/player_stats.gd" id="2_sglur"]
+
+[sub_resource type="Resource" id="Resource_bls4j"]
+script = ExtResource("2_sglur")
+metadata/_custom_type_script = "uid://bxn4u7ivas1jg"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bls4j"]
+atlas = ExtResource("2_abrql")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fkugw"]
+atlas = ExtResource("2_abrql")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8fjmc"]
+atlas = ExtResource("2_abrql")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qiwj3"]
+atlas = ExtResource("2_abrql")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_26q78"]
+atlas = ExtResource("2_abrql")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bectd"]
+atlas = ExtResource("2_abrql")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wvtmh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bls4j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fkugw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8fjmc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qiwj3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_26q78")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bectd")
+}],
+"loop": true,
+"name": &"run",
+"speed": 7.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sfv1e"]
+size = Vector2(16, 22)
+
+[node name="Player" type="CharacterBody2D" unique_id=1962427424]
+script = ExtResource("1_symyc")
+stats = SubResource("Resource_bls4j")
+
+[node name="Animated" type="AnimatedSprite2D" parent="." unique_id=1060527592]
+z_index = 1
+sprite_frames = SubResource("SpriteFrames_wvtmh")
+animation = &"run"
+autoplay = "run"
+frame_progress = 0.3677416
+
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1674401994]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_sfv1e")

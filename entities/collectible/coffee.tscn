@@ -47,7 +47,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_a0uk1"]
-size = Vector2(15, 15)
+size = Vector2(24, 24)
 
 [node name="Coffee" type="Area2D" unique_id=1557659178]
 script = ExtResource("1_h5c1h")

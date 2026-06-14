@@ -25,8 +25,10 @@ const SPAWN_BUFFER_X: float = 80.0
 const CLEANUP_BUFFER_X: float = 80.0
 const THORN_Y: float = 144.0
 const ENEMY_Y: float = 80.0
-const COFFEE_Y: float = 110.0
-const COFFEE_SPAWN_CHANCE: float = 0.3  # 30% cơ hội spawn coffee
+const COFFEE_Y_FLOOR: float = 142.0  # gần đất, chạy qua là nhặt
+const COFFEE_Y_HIGH: float = 90.0   # trên cao, cần nhảy
+const COFFEE_FLOOR_CHANCE: float = 0.65  # 65% sát đất
+const COFFEE_SPAWN_CHANCE: float = 0.4  # 40% cơ hội spawn coffee
 
 var screen_size: Vector2
 var distance_travelled: float = 0.0
@@ -35,7 +37,7 @@ var next_coffee_spawn_distance: float = 300.0
 var spawned_obstacles: Array[Node2D] = []
 var spawned_collectibles: Array[Node2D] = []
 var game_over: bool = false
-var score: int = 0
+var score: float = 0.0
 var current_speed: float = BASE_SPEED
 
 func _ready() -> void:
@@ -54,8 +56,8 @@ func _process(delta: float) -> void:
 	$Player.position.x += movement
 	$Camera2D.position.x += movement
 	distance_travelled += movement
-	score = int(distance_travelled / 10.0)
-	$UI.update_score(score)
+	score += movement * 0.1
+	$UI.update_score(int(score))
 
 	_spawn_obstacles()
 	_spawn_coffee()
@@ -109,7 +111,8 @@ func _spawn_coffee() -> void:
 	while distance_travelled >= next_coffee_spawn_distance:
 		if randf() < COFFEE_SPAWN_CHANCE:
 			var coffee := COFFEE_SCENE.instantiate() as Node2D
-			coffee.position = Vector2($Camera2D.position.x + screen_size.x + SPAWN_BUFFER_X, COFFEE_Y)
+			var coffee_y: float = COFFEE_Y_FLOOR if randf() < COFFEE_FLOOR_CHANCE else COFFEE_Y_HIGH
+			coffee.position = Vector2($Camera2D.position.x + screen_size.x + SPAWN_BUFFER_X, coffee_y)
 			coffee.collected.connect(_on_coffee_collected)
 			add_child(coffee)
 			spawned_collectibles.append(coffee)
@@ -132,12 +135,11 @@ func _on_obstacle_hit() -> void:
 
 func _on_coffee_collected(points: int) -> void:
 	score += points
-	$UI.update_score(score)
-	# TODO: Thêm sound effect cho coffee nếu có
+	$UI.update_score(int(score))
 
 func _on_player_died() -> void:
 	game_over = true
-	$UI.show_game_over(score)
+	$UI.show_game_over(int(score))
 
 func _on_restart_requested() -> void:
 	get_tree().reload_current_scene()

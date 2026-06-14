@@ -12,15 +12,15 @@ const SPEED_SCALE_RATE: float = 0.8
 const MAX_SPEED: float = 400.0
 
 # Spawn algorithm constants - dùng từ player_stats
-const MIN_SAFETY_FACTOR: float = 1.8
-const MAX_SAFETY_FACTOR: float = 2.5
+const MIN_SAFETY_FACTOR: float = 1.1
+const MAX_SAFETY_FACTOR: float = 1.7
 const DIFFICULTY_CURVE: float = 0.0015
 
 const SPAWN_BUFFER_X: float = 80.0
 const CLEANUP_BUFFER_X: float = 80.0
 const THORN_Y: float = 144.0
 const ENEMY_Y: float = 80.0
-const COFFEE_Y_FLOOR: float = 142.0
+const COFFEE_Y_FLOOR: float = 140.0
 const COFFEE_Y_HIGH: float = 90.0
 const COFFEE_FLOOR_CHANCE: float = 0.65
 const COFFEE_SPAWN_CHANCE: float = 0.4

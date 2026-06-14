@@ -8,12 +8,17 @@
 [ext_resource type="PackedScene" uid="uid://c8vwxb2g82j6" path="res://ui/ui.tscn" id="5_ui"]
 [ext_resource type="PackedScene" uid="uid://d3vwxb2g82j7" path="res://audio/audio_manager.tscn" id="6_audio"]
 
+[sub_resource type="Resource" id="Resource_o6xl0"]
+script = ExtResource("4_jyhfs")
+metadata/_custom_type_script = "uid://bxn4u7ivas1jg"
+
 [sub_resource type="Resource" id="Resource_tbgi4"]
 script = ExtResource("4_jyhfs")
 metadata/_custom_type_script = "uid://bxn4u7ivas1jg"
 
 [node name="Main" type="Node2D" unique_id=1995830563]
 script = ExtResource("1_tefeu")
+player_stats = SubResource("Resource_o6xl0")
 
 [node name="Background" parent="." unique_id=349039132 instance=ExtResource("1_o5qli")]
 
